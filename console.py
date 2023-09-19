@@ -19,16 +19,16 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
-             'number_rooms': int, 'number_bathrooms': int,
-             'max_guest': int, 'price_by_night': int,
-             'latitude': float, 'longitude': float
-            }
+        'number_rooms': int, 'number_bathrooms': int,
+        'max_guest': int, 'price_by_night': int,
+        'latitude': float, 'longitude': float
+    }
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -114,13 +114,12 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-            
         """ Create an object of any class """
 
         if not args:
             print("** class name missing **")
             return
-        
+
         arguments = args.split()
         class_name = arguments[0]
         parameters = arguments[1:]
@@ -130,9 +129,10 @@ class HBNBCommand(cmd.Cmd):
             return
 
         if len(arguments) < 1:
-            print("Usage: create <Class name> <param 1> <param 2> <param 3>...")
+            print("Usage: create <Class name> <param 1> \
+                <param 2> <param 3>...")
             return
-        
+
         try:
             new_instance = HBNBCommand.classes[class_name]()
             for param in parameters:
@@ -140,17 +140,18 @@ class HBNBCommand(cmd.Cmd):
                 if len(key_value) == 2:
                     key, value = key_value
                     if value.startswith('"') and value.endswith('"'):
-                        value = value[1:-1].replace('_', ' ').replace('\\"', '"')
+                        value = value[1:-
+                                      1].replace('_', ' ').replace('\\"', '"')
                     elif '.' in value:
                         try:
                             value = float(value)
                         except ValueError:
                             continue
                     else:
-                            try:
-                                value = int(value)
-                            except ValueError:
-                                continue
+                        try:
+                            value = int(value)
+                        except ValueError:
+                            continue
                 setattr(new_instance, key, value)
             new_instance.save()
             print(new_instance.id)
@@ -219,7 +220,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -351,6 +352,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
