@@ -23,7 +23,8 @@ class DBStorage:
         MySQL_database = getenv('HBNB_MYSQL_DB')
 
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
-            MySQL_user, MySQL_password, MySQL_host, MySQL_database), pool_pre_ping=True)
+            MySQL_user, MySQL_password,
+            MySQL_host, MySQL_database), pool_pre_ping=True)
 
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
@@ -40,7 +41,8 @@ class DBStorage:
             from models.city import City
             from models.amenity import Amenity
             classes = {'user': User, 'place': Place,
-                       'amenity': Amenity, 'state': State, 'review': Review, 'city': City}
+                       'amenity': Amenity, 'state': State,
+                       'review': Review, 'city': City}
 
             for c in classes.values():
                 records = self.__session.query(c).all()
