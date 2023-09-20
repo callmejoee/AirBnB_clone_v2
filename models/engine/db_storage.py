@@ -31,7 +31,7 @@ class DBStorage:
     def all(self, cls=None):
         '''query on the current database session (self.__session) all objects
         depending of the class name (argument cls)'''
-
+        objects = {}
         if not cls:
             from models.user import User
             from models.state import State
@@ -39,15 +39,21 @@ class DBStorage:
             from models.place import Place
             from models.city import City
             from models.amenity import Amenity
-            records = self.__session.query(
-                User, State, Review, Place, City, Amenity).all()
+            classes = {'user': User, 'place': Place,
+                       'amenity': Amenity, 'state': State, 'review': Review, 'city': City}
+
+            for c in classes.values():
+                records = self.__session.query(c).all()
+                for object in records:
+                    objects.update(
+                        {object.to_dict()['__class__'] + '.' + object.id: object})
+
         else:
             records = self.__session.query(cls).all()
 
-        objects = {}
-        for object in records:
-            objects.update(
-                {object.to_dict()['__class__'] + '.' + object.id: object})
+            for object in records:
+                objects.update(
+                    {object.to_dict()['__class__'] + '.' + object.id: object})
         return objects
 
     def new(self, obj):

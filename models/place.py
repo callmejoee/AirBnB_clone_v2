@@ -32,34 +32,34 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
 
-    if HBNB_TYPE_STORAGE == 'db':
-        reviews = relationship(
-            "Review", cascade="all, delete", backref="place")
-
-        amenities = relationship("Amenity", secondary="place_amenity",
-                                 viewonly=False)
+    reviews = relationship(
+        "Review", cascade="all, delete", backref="place")
+    amenities = relationship("Amenity", secondary="place_amenity",
+                             viewonly=False)
 
     amenity_ids = []
 
-    @property
-    def amenities(self):
-        amenity_list = []
-        for amenity in list(storage.all(Amenity).values()):
-            if amenity.id in self.amenity_ids:
-                amenity_list.append(amenity)
-        return amenity_list
+    if HBNB_TYPE_STORAGE != 'db':
+        @property
+        def amenities(self):
+            amenity_list = []
+            for amenity in list(storage.all(Amenity).values()):
+                if amenity.id in self.amenity_ids:
+                    amenity_list.append(amenity)
+            return amenity_list
 
-    @amenities.setter
-    def amenities(self, value):
-        if type(value) == Amenity:
-            self.amenity_ids.append(value.id)
+        @amenities.setter
+        def amenities(self, value):
+            if type(value) == Amenity:
+                self.amenity_ids.append(value.id)
 
-    def reviews(self, place_id):
-        """"Returns a list of reviews"""
-        from models.review import Review
-        all_reviews = self.all(Review)
-        reviews_list = []
-        for review in all_reviews.values():
-            if review.place_id == place_id:
-                reviews_list.append(review)
-        return reviews_list
+        @property
+        def reviews(self, place_id):
+            """"Returns a list of reviews"""
+            from models.review import Review
+            all_reviews = self.all(Review)
+            reviews_list = []
+            for review in all_reviews.values():
+                if review.place_id == place_id:
+                    reviews_list.append(review)
+            return reviews_list
