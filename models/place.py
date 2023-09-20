@@ -1,20 +1,22 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 from sqlalchemy import Table, Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from os import getenv
-
+from models import storage
+from models.amenity import Amenity
 
 place_amenity = Table('place_amenity', Base.metadata,
-        Column('place_id', String(60), ForeignKey('places.id'),
-            primary_key=True, nullable=False),
-        Column('amenity_id', String(60), ForeignKey('amenities.id'),
-            primary_key=True, nullable=False)
-        )
+                      Column('place_id', String(60), ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60), ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False)
+                      )
 
-class Place(BaseModel):
+
+class Place(BaseModel, Base):
     """ A place to stay """
 
     __tablename__ = 'places'
@@ -39,22 +41,22 @@ class Place(BaseModel):
     if storage != 'db':
         def amenities(self):
             amenity_list = []
-            for amenity in list(models.storage.all(Amenity).values()):
+            for amenity in list(storage.all(Amenity).values()):
                 if amenity.id in self.amenity_ids:
                     amenity_list.append(amenity)
             return amenity_list
 
-         def amenities(self, value):
+        def amenities(self, value):
             if type(value) == Amenity:
                 self.amenity_ids.append(value.id)
 
-         def reviews(self, place_id):
-        """"Returns a list of reviews"""
-        from models.review import Review
+        def reviews(self, place_id):
+            """"Returns a list of reviews"""
+            from models.review import Review
 
-        all_reviews = self.all(Review)
-        reviews_list = []
-        for review in all_reviews.values():
-            if review.place_id == place_id:
-                reviews_list.append(review)
-        return reviews_list
+            all_reviews = self.all(Review)
+            reviews_list = []
+            for review in all_reviews.values():
+                if review.place_id == place_id:
+                    reviews_list.append(review)
+            return reviews_list
