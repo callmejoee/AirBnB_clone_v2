@@ -67,3 +67,14 @@ class FileStorage:
                 if obj is val:
                     del self.__objects[thing]
                     return
+
+    def reviews(self, place_id):
+        """"Returns a list of reviews"""
+        from models.review import Review
+        
+        all_reviews = self.all(Review)
+        reviews_list = []
+        for review in all_reviews.values():
+            if review.place_id == place_id:
+                reviews_list.append(review)
+        return reviews_list
