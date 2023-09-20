@@ -4,8 +4,6 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
-# add , Base to the class inheritance
-
 
 class User(BaseModel, Base):
     """This class defines a user by various attributes"""

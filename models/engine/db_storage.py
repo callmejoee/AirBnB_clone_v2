@@ -33,6 +33,12 @@ class DBStorage:
         depending of the class name (argument cls)'''
 
         if not cls:
+            from models.user import User
+            from models.state import State
+            from models.review import Review
+            from models.place import Place
+            from models.city import City
+            from models.amenity import Amenity
             records = self.__session.query(
                 User, State, Review, Place, City, Amenity).all()
         else:
