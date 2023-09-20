@@ -35,13 +35,16 @@ class Place(BaseModel, Base):
     reviews = relationship(
         "Review", cascade="all, delete", backref="place")
     amenities = relationship("Amenity", secondary="place_amenity",
-                             viewonly=False)
+                             viewonly=False, overlaps='place_amenities')
 
     amenity_ids = []
 
     if HBNB_TYPE_STORAGE != 'db':
         @property
         def amenities(self):
+            '''returns the list of Amenity instances based on
+            the attribute amenity_ids
+            contains all Amenity.id linked to the Place'''
             amenity_list = []
             for amenity in list(storage.all(Amenity).values()):
                 if amenity.id in self.amenity_ids:
@@ -50,12 +53,16 @@ class Place(BaseModel, Base):
 
         @amenities.setter
         def amenities(self, value):
+            '''handles append method for adding an Amenity.id
+            to the attribute amenity_ids'''
+            '''set am'''
             if type(value) == Amenity:
                 self.amenity_ids.append(value.id)
 
         @property
         def reviews(self, place_id):
-            """"Returns a list of reviews"""
+            """"returns the list of Review instances with
+            place_id equals to the current Place.id"""
             from models.review import Review
             all_reviews = self.all(Review)
             reviews_list = []
