@@ -1,12 +1,6 @@
 import unittest
-from models.base_model import Base
-from models.user import User
-from models.state import State
-from models.review import Review
-from models.place import Place
-from models.city import City
-from models.amenity import Amenity
 from models.engine.db_storage import DBStorage
+from models.user import User
 
 class TestDBStorage(unittest.TestCase):
     def setUp(self):
@@ -15,10 +9,12 @@ class TestDBStorage(unittest.TestCase):
 
     def tearDown(self):
         self.db.close()
-        
-    
-    def test_all():
+
+    def test_all(self):
         all_objects = self.db.all()
-        self.assertIsInstance(all_objects, dict)  
+        self.assertIsInstance(all_objects, dict)
         all_users = self.db.all(User)
         self.assertIsInstance(all_users, dict)
+
+if __name__ == '__main__':
+    unittest.main()
