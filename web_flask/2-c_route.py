@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/bin/bash/python3
 
 from flask import Flask
 
@@ -15,5 +15,11 @@ def hbnb():
     return 'HBNB'
 
 
-if __name__ = '__main__':
+@app.route('/c/<text>', strict_slashes=False)
+def c_route(text):
+    text = text.replace('_', ' ')
+    return 'C {}'.format(text)
+
+
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
